@@ -1,0 +1,17 @@
+resources:
+  jobs:
+    demo_job:
+      name: weather_ingest_job
+      tasks:
+        - task_key: demo_task
+          notebook_task:
+            notebook_path: /Workspace/Users/kamaldeen32@gmail.com/.bundle/databricks/dev/files/src/ingestion.ipynb
+            source: WORKSPACE
+          environment_key: iot_task_environment
+      queue:
+        enabled: true
+      environments:
+        - environment_key: iot_task_environment
+          spec:
+            environment_version: "4"
+      performance_target: PERFORMANCE_OPTIMIZED

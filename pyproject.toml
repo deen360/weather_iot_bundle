@@ -1,0 +1,20 @@
+[project]
+name = "weather_iot_bundle"
+version = "0.0.1"
+requires-python = "==3.12.*" # Required for Databricks Connect 17.x
+dependencies = [
+    "pandas>=2.0.0",
+]
+
+[dependency-groups]
+# Target: Databricks Serverless (Remote Bridge)
+remote = [
+    "databricks-connect==17.3.2", # Matches Runtime 17.3
+    "ipykernel"
+]
+
+# Target: Local Laptop (Local Engine)
+local = [
+    "pyspark==3.5.0", # Stable for local work
+    "ipykernel"
+]
