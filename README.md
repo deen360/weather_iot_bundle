@@ -108,5 +108,11 @@ The weather IoT pipeline executes the following tasks in sequence:
 
 The gold layer tasks run in parallel after the silver layer completes, allowing multiple downstream consumers to work simultaneously.
 
-![Pipeline Execution](Capture%20d'écran%202026-02-15%20183739.png)
+![Pipeline Execution](pipeline.png)
+
+## Dashboard
+
+The project includes a dashboard demonstrating BI visualizations and a table of aggregated weather observations. The screenshot below shows sample charts (city counts, temperature sums, humidity vs temperature) and a preview table of city weather records.
+
+![Weather Dashboard](dashboard.png)
 
