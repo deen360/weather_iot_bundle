@@ -117,3 +117,13 @@ The project includes a dashboard demonstrating BI visualizations and a table of 
 
 ![Weather Dashboard](dashboard.png)
 
+## Infrastructure & API
+
+Links to external repositories used by this project:
+
+- **Terraform (S3 bucket)**: https://github.com/deen360/terraform_S3.git
+- **OpenWeather API scripts**: https://github.com/deen360/Openweather_api_scripts.git
+
+These repositories provide the Terraform configuration for provisioning the S3 storage used as the raw data landing zone, and the scripts for fetching weather data from the OpenWeather API respectively.
+
+
