@@ -18,7 +18,22 @@ variables:
   catalog:
     description: The catalog to use
   schema:
-    description: The schema to use
+    description: The schema to use for the main pipeline for dlt, This is used as a prefix for all tables created by the pipeline.
+  schema_landing:
+    description: The landing schema to use first raw data ingestion
+  schema_bronze:
+    description: The bronze schema to use for basic transformations and cleaning
+  schema_silver:
+    description: The silver schema to use from which we will serve data to end-users and downstream applications
+  schema_gold:
+    description: The gold schema to use for curated tables that are ready for consumption by end-users and downstream applications
+  volume:
+    description: The volume to use for storing raw data files in the landing zone
+  bucket:
+    description: The bucket to use for storing raw data files in S3
+  dev_flag:
+    default: "true"
+    description: Flag to indicate whether the deployment is for development or production
 
 targets:
   dev:
@@ -33,6 +48,12 @@ targets:
     variables:
       catalog: iot_catalog
       schema: dev
+      schema_landing: 00_landing
+      schema_bronze: 01_bronze
+      schema_silver: 02_silver
+      schema_gold: 03_gold
+      volume: source_iot_data
+      bucket: my-databrick-iot-deen-001
 
     
   prod:
@@ -42,8 +63,17 @@ targets:
       # We explicitly deploy to /Workspace/Users/kamaldeen32@gmail.com to make sure we only have a single copy.
       root_path: /Workspace/Users/kamaldeen32@gmail.com/.bundle/${bundle.name}/${bundle.target}
     variables:
-      catalog: iot_catalog
-      schema: prod
+      catalog: iot_catalog_prod
+      schema_landing: 01_landing
+      schema_bronze: 02_bronze
+      schema_silver: 03_silver
+      schema_gold: 04_gold
+      volume: source_iot_data
+      bucket: my-databrick-iot-deen-001
+      
+      dev_flag:
+        default: "false"
+
     permissions:
       - user_name: kamaldeen32@gmail.com
         level: CAN_MANAGE

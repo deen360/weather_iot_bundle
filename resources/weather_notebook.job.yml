@@ -1,0 +1,99 @@
+resources:
+  jobs:
+    demo_job:
+      name: iot_notebook_job
+      trigger:
+        pause_status: UNPAUSED
+        file_arrival:
+          url: s3://my-databrick-iot-deen-001/raw_weather/
+      tasks:
+        - task_key: catalog_creation_task
+          notebook_task:
+            notebook_path: ../notebooks/catalog/catalog_creation.ipynb
+            base_parameters:
+              catalog: iot_catalog_test
+              schema_landing: 00_landing
+              schema_silver: 02_silver
+              schema_gold: 03_gold
+              volume: source_iot_data
+              schema_bronze: 01_bronze
+              bucket: my-databrick-iot-deen-001
+            source: WORKSPACE
+          environment_key: demo_task_environment
+        - task_key: bronze_task
+          depends_on:
+            - task_key: catalog_creation_task
+          notebook_task:
+            notebook_path: ../notebooks/bronze/bronze.ipynb
+            base_parameters:
+              catalog: iot_catalog_test
+              schema_landing: 00_landing
+              schema_silver: 02_silver
+              schema_gold: 03_gold
+              volume: source_iot_data
+              schema_bronze: 01_bronze
+              bucket: my-databrick-iot-deen-001
+            source: WORKSPACE
+          environment_key: demo_task_environment
+        - task_key: silver_task
+          depends_on:
+            - task_key: bronze_task
+          notebook_task:
+            notebook_path: ../notebooks/silver/silver.ipynb
+            base_parameters:
+              catalog: iot_catalog_test
+              schema_landing: 00_landing
+              schema_silver: 02_silver
+              schema_gold: 03_gold
+              volume: source_iot_data
+              schema_bronze: 01_bronze
+            source: WORKSPACE
+          environment_key: demo_task_environment
+        - task_key: gold_bi_task
+          depends_on:
+            - task_key: silver_task
+          notebook_task:
+            notebook_path: ../notebooks/gold/gold_bi.ipynb
+            base_parameters:
+              catalog: iot_catalog_test
+              schema_landing: 00_landing
+              schema_silver: 02_silver
+              schema_gold: 03_gold
+              volume: source_iot_data
+            source: WORKSPACE
+          environment_key: demo_task_environment
+        - task_key: gold_ds_task
+          depends_on:
+            - task_key: silver_task
+          notebook_task:
+            notebook_path: ../notebooks/gold/gold_ds.ipynb
+            base_parameters:
+              catalog: iot_catalog_test
+              schema_landing: 00_landing
+              schema_silver: 02_silver
+              schema_gold: 03_gold
+              volume: source_iot_data
+            source: WORKSPACE
+          environment_key: demo_task_environment
+        - task_key: gold_ml_task
+          depends_on:
+            - task_key: silver_task
+          notebook_task:
+            notebook_path: ../notebooks/gold/gold_ml.ipynb
+            base_parameters:
+              catalog: iot_catalog_test
+              schema_landing: 00_landing
+              schema_silver: 02_silver
+              schema_gold: 03_gold
+              volume: source_iot_data
+            source: WORKSPACE
+          environment_key: demo_task_environment
+      queue:
+        enabled: true
+      environments:
+        - environment_key: demo_task_environment
+          spec:
+            dependencies:
+              - ../dist/*.whl
+            environment_version: "4"
+      performance_target: PERFORMANCE_OPTIMIZED

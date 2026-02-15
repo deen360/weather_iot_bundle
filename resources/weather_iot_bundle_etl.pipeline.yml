@@ -3,18 +3,37 @@
 resources:
   pipelines:
     weather_iot_bundle_etl:
-      name: weather_iot_bundle_etl
-      catalog: ${var.catalog}
-      schema: ${var.schema}
-      serverless: true
-      root_path: "../src/weather_iot_bundle_etl"
-
+      name: "weather_iot_bundle_etl"
+      configuration:
+        catalog: ${var.catalog}
+        schema_landing: ${var.schema_landing}
+        schema_bronze: ${var.schema_bronze}
+        schema_silver: ${var.schema_silver}
+        schema_gold: ${var.schema_gold}
+        volume: ${var.volume}
+        bucket: ${var.bucket}
+        dev_flag: ${var.dev_flag}
       libraries:
-        - glob:
-            include: ../src/weather_iot_bundle_etl/transformations/**
-
+        - notebook:
+            path: ../dlt_etl/bronze/bronze.ipynb
+        - notebook:
+            path: ../dlt_etl/silver/silver.ipynb
+        - notebook:
+            path: ../dlt_etl/gold/gold_bi.ipynb
+        - notebook:
+            path: ../dlt_etl/gold/gold_ds.ipynb
+        - notebook:
+            path: ../dlt_etl/gold/gold_ml.ipynb
+      schema: dev
+      development: ${var.dev_flag}
+      photon: true
+      catalog: ${var.catalog}
+      serverless: true
+      tags:
+        dev: kamaldeen32
+      root_path: ../src/weather_iot_bundle_etl
       environment:
         dependencies:
+          - ../dist/*.whl       
           # We include every dependency defined by pyproject.toml by defining an editable environment
           # that points to the folder where pyproject.toml is deployed.
-          - --editable ${workspace.file_path}
