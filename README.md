@@ -23,6 +23,7 @@ The weather IoT data pipeline follows a medallion architecture pattern:
 IoT Devices -> S3 Bucket -> Bronze Layer -> Silver Layer -> Gold Layer
                 (Raw Data)  (Ingestion)  (Transformation) (Analytics Ready)
 ```
+![Architecture Diagram](architecture.png)
 
 **Data Flow:**
 
