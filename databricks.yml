@@ -59,15 +59,16 @@ targets:
   prod:
     mode: production
     workspace:
-      host: https://dbc-6c4db926-6564.cloud.databricks.com
+      host: https://dbc-163a34af-ff18.cloud.databricks.com
       # We explicitly deploy to /Workspace/Users/kamaldeen32@gmail.com to make sure we only have a single copy.
       root_path: /Workspace/Users/kamaldeen32@gmail.com/.bundle/${bundle.name}/${bundle.target}
     variables:
       catalog: iot_catalog_prod
-      schema_landing: 01_landing
-      schema_bronze: 02_bronze
-      schema_silver: 03_silver
-      schema_gold: 04_gold
+      schema: dev
+      schema_landing: 00_landing
+      schema_bronze: 01_bronze
+      schema_silver: 02_silver
+      schema_gold: 03_gold
       volume: source_iot_data
       bucket: my-databrick-iot-deen-001
       
@@ -76,4 +77,6 @@ targets:
 
     permissions:
       - user_name: kamaldeen32@gmail.com
+        level: CAN_MANAGE
+      - user_name: yusuf.kamorudeen@devoteam.com
         level: CAN_MANAGE
